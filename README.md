@@ -1,6 +1,30 @@
 # Media Sherlock
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/5sXCtyXH3B0?si=rtS_WDzFB-nBlnc9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[![Media Sherlock](./assets/logo4.jpg)](https://www.youtube.com/watch?v=5sXCtyXH3B0)
+
+### Сборщик информации о медиа файлах
+---
+Программа собирёт инфуормцию о конкретном медиафайле и выведет её в блокноте
+
+Вывод (пример):
+```
+Видео дорожка:
+---------------
+Codec ID: h264
+Width: 1280px
+Height: 720px
+Display Aspect Ratio: 
+Frame Rate: 30000/1001
+Bit Rate: 2867855
+
+Аудио дорожка:
+---------------
+Codec ID: aac
+Sampling Rate: 48000
+Channels: 2
+Bit Rate: 189384
+
+```
 
 ## Установка
 
