@@ -10,6 +10,7 @@ import (
 	"strings"
 )
 
+// Video Info Struct...
 type VideoInfo struct {
 	CodecName          string `json:"codec_name"`
 	Width              int    `json:"width"`
@@ -19,6 +20,7 @@ type VideoInfo struct {
 	BitRate            string `json:"bit_rate"`
 }
 
+// Audio Info Struct...
 type AudioInfo struct {
 	CodecName  string `json:"codec_name"`
 	SampleRate string `json:"sample_rate"`
@@ -26,6 +28,7 @@ type AudioInfo struct {
 	BitRate    string `json:"bit_rate"`
 }
 
+// Main Func...
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: ./video_info <file_path>")
@@ -45,23 +48,34 @@ func main() {
 
 	if videoErr != nil {
 		fmt.Printf("Ошибка при получении информации о видео: %v\n", videoErr)
-	} else {
-		data := buildVideoInfoString(videoInfo, displayAspectRatio)
-		if audioErr != nil {
-			fmt.Println(data)
-		} else {
-			audioData := buildAudioInfoString(audioInfo)
-			data += "\n" + audioData
-		}
+		return
+	}
 
-		if err := openInNotepad(data); err != nil {
-			fmt.Printf("Ошибка при открытии в блокноте: %v\n", err)
-		} else {
-			os.Exit(0)
-		}
+	data := buildVideoInfoString(videoInfo, displayAspectRatio)
+	data += buildAudioInfoString(audioInfo)
+	detailedVideoInfo := buildFullVideoInfoString(videoInfo, displayAspectRatio)
+	detailedAudioInfo := buildFullAudioInfoString(audioInfo)
+
+	if audioErr == nil {
+		data = "Общая информация:\n---------------\n" + data
+	}
+
+	if videoErr == nil {
+		data += detailedVideoInfo
+	}
+
+	if audioErr == nil {
+		data += detailedAudioInfo
+	}
+
+	if err := openInNotepad(data); err != nil {
+		fmt.Printf("Ошибка при открытии в блокноте: %v\n", err)
+	} else {
+		os.Exit(0)
 	}
 }
 
+// Find ffprobe utility func...
 func findFFprobe() (string, error) {
 	ffprobeName := "ffprobe"
 	paths := []string{ffprobeName}
@@ -71,7 +85,6 @@ func findFFprobe() (string, error) {
 	}
 
 	if ext := filepath.Ext(ffprobeName); ext == "" {
-		// Добавьте расширение, если оно отсутствует (например, ".exe" в Windows)
 		paths = append(paths, ffprobeName+getExecutableExtension())
 	}
 
@@ -97,6 +110,13 @@ func getExecutableExtension() string {
 
 func buildVideoInfoString(info *VideoInfo, displayAspectRatio string) string {
 	var builder strings.Builder
+	builder.WriteString(fmt.Sprintf("%s, %dx%d, %s, %s кадр/с, %s кбит/с\n",
+		getCodecName(info.CodecName), info.Width, info.Height, getDisplayAspectRatio(displayAspectRatio), info.FrameRate, info.BitRate))
+	return builder.String()
+}
+
+func buildFullVideoInfoString(info *VideoInfo, displayAspectRatio string) string {
+	var builder strings.Builder
 	builder.WriteString("\nВидео дорожка:\n---------------\n")
 	builder.WriteString(fmt.Sprintf("Codec ID: %s\n", info.CodecName))
 	builder.WriteString(fmt.Sprintf("Width: %dpx\n", info.Width))
@@ -107,7 +127,32 @@ func buildVideoInfoString(info *VideoInfo, displayAspectRatio string) string {
 	return builder.String()
 }
 
+func getCodecName(codecName string) string {
+	switch codecName {
+	case "h264":
+		return "MPEG4/ISO/AVC"
+	case "h265":
+		return "HEVC/H.265"
+	default:
+		return codecName
+	}
+}
+
+func getDisplayAspectRatio(aspectRatio string) string {
+	if aspectRatio == "" {
+		return "N/A"
+	}
+	return aspectRatio
+}
+
 func buildAudioInfoString(info *AudioInfo) string {
+	var builder strings.Builder
+	builder.WriteString(fmt.Sprintf("%s, %s кГц, %d ch, %s Кбит/с\n",
+		info.CodecName, info.SampleRate, info.Channels, info.BitRate))
+	return builder.String()
+}
+
+func buildFullAudioInfoString(info *AudioInfo) string {
 	var builder strings.Builder
 	builder.WriteString("\nАудио дорожка:\n---------------\n")
 	builder.WriteString(fmt.Sprintf("Codec ID: %s\n", info.CodecName))
