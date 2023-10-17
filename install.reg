@@ -1,7 +1,7 @@
 Windows Registry Editor Version 5.00
 
 [HKEY_CLASSES_ROOT\*\shell\Media Sherlock]
-@="Open by Media Sherlock"
+@="Open with Media Sherlock"
 
 [HKEY_CLASSES_ROOT\*\shell\Media Sherlock\command]
-@="\"C:\Program Files\ffmpegs\\MSH.exe.exe\" \"%1\""
+@="\"C:\Program Files\ffmpegs\MSH.exe\" \"%1\""

@@ -128,8 +128,20 @@ func openInNotepad(data string) error {
 		return err
 	}
 
-	cmd := exec.Command("notepad.exe", tmpfile.Name())
-	return cmd.Run()
+	// Команда скрытия окна командной строки
+	hideCmd := exec.Command("cmd", "/C", "start", "notepad.exe", tmpfile.Name())
+
+	// Скрытие окна командной строки
+	if err := hideCmd.Start(); err != nil {
+		return err
+	}
+
+	// Ждём завершения скрытия окна командной строки
+	if err := hideCmd.Wait(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func getVideoInfo(filePath, ffprobePath string) (*VideoInfo, string, error) {
