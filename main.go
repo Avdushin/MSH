@@ -10,23 +10,26 @@ import (
 	"strings"
 )
 
-// Video Info Struct...
-type VideoInfo struct {
-	CodecName          string `json:"codec_name"`
-	Width              int    `json:"width"`
-	Height             int    `json:"height"`
-	DisplayAspectRatio string `json:"display_aspect_ratio"`
-	FrameRate          string `json:"r_frame_rate"`
-	BitRate            string `json:"bit_rate"`
-}
+// Structs Video & Audio
+type (
+	// Video Info Struct...
+	VideoInfo struct {
+		CodecName          string `json:"codec_name"`
+		Width              int    `json:"width"`
+		Height             int    `json:"height"`
+		DisplayAspectRatio string `json:"display_aspect_ratio"`
+		FrameRate          string `json:"r_frame_rate"`
+		BitRate            string `json:"bit_rate"`
+	}
 
-// Audio Info Struct...
-type AudioInfo struct {
-	CodecName  string `json:"codec_name"`
-	SampleRate string `json:"sample_rate"`
-	Channels   int    `json:"channels"`
-	BitRate    string `json:"bit_rate"`
-}
+	// Audio Info Struct...
+	AudioInfo struct {
+		CodecName  string `json:"codec_name"`
+		SampleRate string `json:"sample_rate"`
+		Channels   int    `json:"channels"`
+		BitRate    string `json:"bit_rate"`
+	}
+)
 
 // Main Func...
 func main() {
